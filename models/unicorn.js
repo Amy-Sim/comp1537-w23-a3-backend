@@ -4,6 +4,6 @@ const unicornSchema = new mongoose.Schema({
     
 });
 
-const unicornModel = mongoose.model("unicorns", unicornSchema);
+const unicornModel = mongoose.model('unicorns', unicornSchema);
 
-module.export = unicornModel;
+module.exports = unicornModel;

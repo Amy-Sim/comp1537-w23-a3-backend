@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 app.use(cors());
 app.use(express.json());
 
-const unicornModel = require('./models/unicorns')
+const unicornModel = require('./models/unicorn');
 
 app.post("/search", async (req, res) => {
 //   console.log(req.body);
