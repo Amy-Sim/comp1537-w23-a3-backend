@@ -6,18 +6,17 @@ const mongoose = require("mongoose");
 app.use(cors());
 app.use(express.json());
 
-const unicornModel = require('./models/unicorn');
+const unicornModel = require("./models/unicorn");
 
 app.post("/search", async (req, res) => {
-//   console.log(req.body);
+  //   console.log(req.body);
   if (req.body.type === "nameSearch") {
-    
-    var selectionArgument = {}
+    var selectionArgument = {};
     if (req.body.name)
       selectionArgument = {
         name: req.body.name,
       };
-     var projectionArgument = {}
+    var projectionArgument = {};
     if (
       req.body.projectionFilters.name === true &&
       req.body.projectionFilters.weight === false
@@ -26,13 +25,25 @@ app.post("/search", async (req, res) => {
     } else {
       // Todo
     }
-    const result = await unicornModel.find(selectionArgument, projectionArgument);
-
+    const result = await unicornModel.find(
+      selectionArgument,
+      projectionArgument
+    );
     res.json(result);
+
   } else if (req.body.type === "weightSearch") {
-    //Todo
+    const { weight } = req.body;
+    const result = await unicornModel.find(
+      { weight: { $gt: parseFloat(weight) } },
+      { name: 1, weight: 1, _id: 0 }
+    );
+    console.log(result);
+    res.json(result); 
+
   } else if (req.body.type === "foodSearch") {
-    //Todo
+    // Code for food search
+  } else {
+    res.status(400).send("Invalid search type.");
   }
 });
 
