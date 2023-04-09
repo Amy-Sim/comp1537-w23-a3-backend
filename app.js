@@ -24,7 +24,6 @@ app.post("/search", async (req, res) => {
       projectionArgument = { name: 1, weight: 1, _id: 1, loves: 1 };
     }  else {
       // Todo 1
-      
     }
     const result = await unicornModel.find(
       selectionArgument,
