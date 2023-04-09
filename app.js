@@ -21,9 +21,10 @@ app.post("/search", async (req, res) => {
       req.body.projectionFilters.name === true &&
       req.body.projectionFilters.weight === false
     ) {
-      projectionArgument = { name: 1, _id: 0 };
-    } else {
-      // Todo
+      projectionArgument = { name: 1, weight: 1, _id: 1, loves: 1 };
+    }  else {
+      // Todo 1
+      
     }
     const result = await unicornModel.find(
       selectionArgument,
@@ -45,10 +46,28 @@ app.post("/search", async (req, res) => {
     if (projectionFilters.weight) {
       projectionQuery.weight = 1;
     }
+    if (projectionFilters.weight) {
+      projectionQuery.loves = 1;
+    } else {
+      // Todo 2
+    }
     const result = await unicornModel.find(weightQuery, projectionQuery);
     res.json(result);
   } else if (req.body.type === "foodSearch") {
-    // Code for food search
+    const favoriteFood = req.body.favoriteFood;
+
+    const lovesQuery = { $and: [] };
+    for (let food in favoriteFood) {
+      if (favoriteFood[food]) {
+        lovesQuery["$and"].push({ loves: food });
+      }
+    }
+
+    const projectionArgument = { name: 1, weight: 1, loves: 1, _id: 0 };
+
+    const result = await unicornModel.find(lovesQuery, projectionArgument);
+
+    res.json(result);
   } else {
     res.status(400).send("Invalid search type.");
   }
