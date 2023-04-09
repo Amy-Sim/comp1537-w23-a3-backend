@@ -30,16 +30,23 @@ app.post("/search", async (req, res) => {
       projectionArgument
     );
     res.json(result);
-
   } else if (req.body.type === "weightSearch") {
-    const { weight } = req.body;
-    const result = await unicornModel.find(
-      { weight: { $gt: parseFloat(weight) } },
-      { name: 1, weight: 1, _id: 0 }
-    );
-    console.log(result);
-    res.json(result); 
-
+    const { minweight, maxweight, projectionFilters } = req.body;
+    const weightQuery = {
+      weight: {
+        $gt: parseFloat(minweight),
+        $lt: parseFloat(maxweight),
+      },
+    };
+    const projectionQuery = {};
+    if (projectionFilters.name) {
+      projectionQuery.name = 1;
+    }
+    if (projectionFilters.weight) {
+      projectionQuery.weight = 1;
+    }
+    const result = await unicornModel.find(weightQuery, projectionQuery);
+    res.json(result);
   } else if (req.body.type === "foodSearch") {
     // Code for food search
   } else {
